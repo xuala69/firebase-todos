@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_todo/models/todo_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NewTodoPage extends StatefulWidget {
   final TodoModel? todo;
@@ -13,6 +17,9 @@ class _NewTodoPageState extends State<NewTodoPage> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   bool complete = false;
+
+  final ImagePicker _picker = ImagePicker();
+  String? imageUrl;
 
   @override
   void initState() {
@@ -28,6 +35,28 @@ class _NewTodoPageState extends State<NewTodoPage> {
     }
   }
 
+  void pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      uploadImage(image);
+    }
+  }
+
+  void uploadImage(XFile file) async {
+    UploadTask uploadTask;
+
+    // Create a Reference to the file
+    Reference ref = FirebaseStorage.instance.ref().child('1some-image.jpg');
+    uploadTask = ref.putFile(File(file.path));
+    uploadTask.then((p0) async {
+      if (p0.state == TaskState.success) {
+        final url = await ref.getDownloadURL();
+        imageUrl = url;
+        setState(() {});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +67,18 @@ class _NewTodoPageState extends State<NewTodoPage> {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
+            if (imageUrl != null)
+              Image.network(
+                imageUrl!,
+                height: 150,
+              )
+            else
+              IconButton(
+                onPressed: () {
+                  pickImage();
+                },
+                icon: const Icon(Icons.add_a_photo_outlined),
+              ),
             TextField(
               controller: titleController,
               decoration: const InputDecoration(labelText: "Title"),
@@ -72,11 +113,15 @@ class _NewTodoPageState extends State<NewTodoPage> {
             ElevatedButton(
               onPressed: () {
                 var newId = DateTime.now().millisecondsSinceEpoch.toString();
+                if (widget.todo != null) {
+                  newId = widget.todo!.id;
+                }
                 TodoModel newItem = TodoModel(
                   id: newId,
                   title: titleController.text,
                   description: descriptionController.text,
                   done: complete,
+                  image: imageUrl,
                 );
                 titleController.text = "";
                 descriptionController.text = "";

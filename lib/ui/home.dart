@@ -27,10 +27,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void updateToFirestore(TodoModel todo) async {
-    FirebaseFirestore.instance
-        .collection("todos")
-        .doc(todo.id)
-        .update(todo.toMap());
+    try {
+      FirebaseFirestore.instance
+          .collection("todos")
+          .doc(todo.id)
+          .update(todo.toMap());
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   void deleteFromFirestore(TodoModel todo) async {
@@ -122,10 +126,12 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 title: Text(item.title),
                 subtitle: Text(item.description ?? "Not available"),
-                leading: Icon(
-                  Icons.done_all,
-                  color: item.done == true ? Colors.green : Colors.red,
-                ),
+                leading: item.image != null
+                    ? Image.network(item.image!)
+                    : Icon(
+                        Icons.done_all,
+                        color: item.done == true ? Colors.green : Colors.red,
+                      ),
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {

@@ -161,16 +161,23 @@ class _HomePageState extends State<HomePage> {
                               TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    // markAsDone(index);
+                                    item.done = true;
+                                    updateToFirestore(item);
                                   },
                                   child: const Text("Yes")),
                             ],
                           );
                         });
                   },
-                  icon: const Icon(
-                    Icons.check_box_outline_blank,
-                  ),
+                  icon: item.done
+                      ? const Icon(
+                          Icons.check_box_outlined,
+                          color: Colors.green,
+                        )
+                      : const Icon(
+                          Icons.check_box_outline_blank,
+                          color: Colors.yellow,
+                        ),
                 ),
               ),
             ),

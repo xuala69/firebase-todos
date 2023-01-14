@@ -32,6 +32,7 @@ class _NewTodoPageState extends State<NewTodoPage> {
       titleController.text = widget.todo!.title;
       descriptionController.text = widget.todo!.description ?? "";
       complete = widget.todo!.done;
+      imageUrl = widget.todo!.image;
     }
   }
 
@@ -44,9 +45,8 @@ class _NewTodoPageState extends State<NewTodoPage> {
 
   void uploadImage(XFile file) async {
     UploadTask uploadTask;
-
-    // Create a Reference to the file
-    Reference ref = FirebaseStorage.instance.ref().child('1some-image.jpg');
+    var newId = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference ref = FirebaseStorage.instance.ref().child('$newId.jpg');
     uploadTask = ref.putFile(File(file.path));
     uploadTask.then((p0) async {
       if (p0.state == TaskState.success) {

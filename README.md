@@ -116,3 +116,18 @@ samples, guidance on mobile development, and a full API reference.
     17. ListTile a title ah Text widget in word title display tur ani anga, subtitle ah word description  display tur
     18. ListTile a trailing parameter ah IconButton() hman tur ani a, IconButton a icon ah hian Icons.delete hman tur ani ang.
     19. ListTile trailing a IconButton click khian dialog in Delete an duh leh duhloh confirm tir leh tur, an confirm hnu ah choh delete tur.
+
+
+
+
+### Android app build 
+    1. Build modes
+        Debug - VS Code atanga debug te nen a inang
+        Profile - Release mode mock nan leh test nan
+        Release - Store a upload tlak/finished product 
+    
+    2. Android apk build 
+        flutter build apk --release
+        heihi apk build na command ani a, "apk" tih keyword khi "appbundle" tih a thlak in playstore file bundle generate theih ani bawk
+    
+    

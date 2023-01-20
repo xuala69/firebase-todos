@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_todo/models/todo_model.dart';
 import 'package:firebase_todo/ui/create_new_todo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -77,6 +80,18 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home page"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              if (await FlutterContacts.requestPermission()) {
+// Get all contacts (fully fetched)
+                var contacts = await FlutterContacts.getContacts();
+                log("COntacts $contacts");
+              }
+            },
+            icon: const Icon(Icons.contact_page),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

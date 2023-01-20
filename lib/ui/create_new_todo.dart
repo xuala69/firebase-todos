@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_todo/models/todo_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -20,6 +21,7 @@ class _NewTodoPageState extends State<NewTodoPage> {
 
   final ImagePicker _picker = ImagePicker();
   String? imageUrl;
+  bool uploading = false;
 
   @override
   void initState() {
@@ -37,10 +39,67 @@ class _NewTodoPageState extends State<NewTodoPage> {
   }
 
   void pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null) {
-      uploadImage(image);
-    }
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Row(
+            children: [
+              Expanded(
+                child: MaterialButton(
+                    onPressed: () async {
+                      final XFile? image =
+                          await _picker.pickImage(source: ImageSource.camera);
+                      if (image != null) {
+                        uploadImage(image);
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Icon(
+                          Icons.camera_alt,
+                          size: 35,
+                        ),
+                        Text("Camera"),
+                        SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    )),
+              ),
+              Expanded(
+                child: MaterialButton(
+                  onPressed: () async {
+                    final XFile? image =
+                        await _picker.pickImage(source: ImageSource.gallery);
+                    if (image != null) {
+                      uploadImage(image);
+                    }
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Icon(
+                        Icons.photo_outlined,
+                        size: 35,
+                      ),
+                      Text("Gallery"),
+                      SizedBox(
+                        height: 15,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   void uploadImage(XFile file) async {
@@ -48,11 +107,15 @@ class _NewTodoPageState extends State<NewTodoPage> {
     var newId = DateTime.now().millisecondsSinceEpoch.toString();
     Reference ref = FirebaseStorage.instance.ref().child('$newId.jpg');
     uploadTask = ref.putFile(File(file.path));
+    uploading = true;
+    setState(() {});
     uploadTask.then((p0) async {
       if (p0.state == TaskState.success) {
         final url = await ref.getDownloadURL();
         imageUrl = url;
-        setState(() {});
+        setState(() {
+          uploading = false;
+        });
       }
     });
   }
@@ -73,11 +136,16 @@ class _NewTodoPageState extends State<NewTodoPage> {
                 height: 150,
               )
             else
-              IconButton(
-                onPressed: () {
-                  pickImage();
-                },
-                icon: const Icon(Icons.add_a_photo_outlined),
+              SizedBox(
+                height: 150,
+                child: uploading
+                    ? const CupertinoActivityIndicator()
+                    : IconButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        icon: const Icon(Icons.add_a_photo_outlined),
+                      ),
               ),
             TextField(
               controller: titleController,
@@ -112,6 +180,9 @@ class _NewTodoPageState extends State<NewTodoPage> {
             ),
             ElevatedButton(
               onPressed: () {
+                if (uploading) {
+                  return;
+                }
                 var newId = DateTime.now().millisecondsSinceEpoch.toString();
                 if (widget.todo != null) {
                   newId = widget.todo!.id;
@@ -127,7 +198,13 @@ class _NewTodoPageState extends State<NewTodoPage> {
                 descriptionController.text = "";
                 Navigator.of(context).pop(newItem);
               },
-              child: Text(widget.todo == null ? "Create" : "Update"),
+              child: uploading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : Text(widget.todo == null ? "Create" : "Update"),
             ),
           ],
         ),

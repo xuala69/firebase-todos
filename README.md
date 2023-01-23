@@ -131,3 +131,134 @@ samples, guidance on mobile development, and a full API reference.
         heihi apk build na command ani a, "apk" tih keyword khi "appbundle" tih a thlak in playstore file bundle generate theih ani bawk
     
     
+### Food Ordering app features
+    1. Sign in e-mail/password or guest/anonymous
+    2. End user app + Admin app + Restaurant app
+    3. Admin app chu Directory nen feature inang deuh vek anga, sign in with email password a awm belh anga, restaurant  list display, add new/edit leh delete a awm bawk ang. hei hian restaurant app user tur a create ang(firebase console atanga user siam in, an uid leh email fill up tur angin).
+    4. User app lamah menu list a awm anga, user ten an duh item an order thei anga, category/tag/restaurant hmangin an filter thei bawk ang.
+    5. Admin app lamah categories/tag manage na a awm belh anga, categories/tag list an siamsa atangin restaurant app in a menu item atan alo select ang
+    6. Restaurant user app (sign in chiah a awm ang) menu/item create/edit/delete a awm anga, home ah item list a in display ang.
+    7. item an create/edit dawn ah categories /tag awmsa atangin an select ang.
+
+## Collection structure
+    1. restaurants
+        id-string
+        name-string
+        description-string
+        images- List<String>
+        ownerId-String 
+        ownerEmail- string
+
+        menus sub collection a awm ang
+            id-string
+            name-string
+            description-string
+            images-List<String> (url of images)
+            categories-List<Category>
+            tag-List<Tag>
+            available-bool
+            price-double
+        orders sub collection a awm bawk ang
+            id-string
+            name-string (ordertu name)
+            status-string(order confirmed/picked up by courier etc)
+            phone-string(ordertu phone)
+            totalPayable-double
+            items-List of Data
+                Data model a field tur te
+                    menuId-string (menus subcollection ami)
+                    name-string(menus subcollection ami)
+                    price-double-(menus subcollection ami)
+                    quantity-int(sanpiau 2 )
+                    image-(menus subcollection a images list ami pakhat dah)
+
+    2. categories
+        id-string
+        title-string
+        description-string
+        image-string
+    3. tags
+        id-string
+        title-string
+    4. users
+        id-string(id hi authentication atanga an uid neih hman tur)
+        name-string
+        email-string
+        role-string (user/admin/restaurant)
+
+
+        orders sub collection a awm bawk ang
+            id-string
+            name-string (ordertu name)
+            phone-string(ordertu phone)
+            totalPayable-double
+            status-string(order confirmed/picked up by courier etc)
+            items-List of Data
+                Data model a field tur te
+                    menuId-string (menus subcollection ami)
+                    name-string(menus subcollection ami)
+                    price-double-(menus subcollection ami)
+                    quantity-int(sanpiau 2 )
+                    image-(menus subcollection a images list ami pakhat dah)
+
+## Khawih theih nghal
+    1. Admin app - directory app ang anianga, create/edit page ah userId leh userEmail enter na tur dah tel tur (restaurants collection ah write tur)
+    2. Admin app ah bawk, category+tag list display page leh CRUD na tur siam.
+
+        
+        
+
+    
+        
+
+
+
+### Assignment Management app features
+    1. Sign in email-password vek hman tur ani anga, sign in ngei2 angai ang
+    2. End user(students) app + admin app 
+    3. Admin app chu contacts app nen feature inang deuh vek anga, sign in with email-passowrd a awm belh anga, items list display, add new/edit leh delete a awm bawk ang.
+    4. User app lamah assignment list a awm anga, heihi an current class based a filter sa tur ani ang.
+    5. Admin app lamah class/combination manage na a awm belh anga, class/combination list an siamsa atangin assignment an add/edit dawn ah an va select ang.
+
+
+## Collection structure
+    1. assignments
+        id-string
+        title-string
+        description-string
+        images- List<String>(url list)
+        pdfs-List<String>(url list)
+        subject-Map {id:subjId,name:subjName}
+        createdAt-Timestamp
+        dueAt-Timestamp
+        mark- Double
+        semester-string
+        year-string
+        department-string
+
+        submissions Sub collection a nei ang assignments hian
+            id-string(from user)
+            name-string(from user)
+            answerText-string
+            image - String?
+            pdf-String?
+            score-double
+            submittedAt-Timestamp
+
+    2. subjects
+        id-string
+        name-string
+        description-string
+        year-string
+        department-string
+        semester-string 
+
+    3. users
+        id-string(id hi authentication atanga an uid neih hman tur)
+        name-string
+        email-string
+        currentSem-string
+        currentYear-string
+        currentDept-string
+        
+

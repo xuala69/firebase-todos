@@ -218,7 +218,7 @@ samples, guidance on mobile development, and a full API reference.
     2. End user(students) app + admin app 
     3. Admin app chu contacts app nen feature inang deuh vek anga, sign in with email-passowrd a awm belh anga, items list display, add new/edit leh delete a awm bawk ang.
     4. User app lamah assignment list a awm anga, heihi an current class based a filter sa tur ani ang.
-    5. Admin app lamah class/combination manage na a awm belh anga, class/combination list an siamsa atangin assignment an add/edit dawn ah an va select ang.
+    5. Admin app lamah class/combination manage na a awm belh anga, class/combination list an siamsa atangin assignment an add/edit dawn ah an va select ang. User list ami an currentSem/year/dept update nan.
 
 
 ## Collection structure
@@ -257,8 +257,12 @@ samples, guidance on mobile development, and a full API reference.
         id-string(id hi authentication atanga an uid neih hman tur)
         name-string
         email-string
+        role- admin/student
         currentSem-string
         currentYear-string
         currentDept-string
         
 
+### Admin/teacher app
+    1. Bottom nav bar... tab 1 ah subjects manage na... tab 2 ah assignments manage na...tab 3 ah students management
+    2. Student app ah login hnu ah currentSem/year/dept based in assignment filter tur ani anga, single item click in answer submit page ah a kal anga, tah hian answer ziahna textffield bakah image/pdf upload na dah tel tur, chuan submit button a awm leh ang.
